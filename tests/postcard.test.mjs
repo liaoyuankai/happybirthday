@@ -61,3 +61,11 @@ test("advances story pages without restarting the audio", async () => {
   assert.match(js, /nextButtons\.forEach/);
   assert.match(js, /showStoryPage\(0\)/);
 });
+
+test("keeps page three visually consistent without a photo background", async () => {
+  const html = await readFile(htmlPath, "utf8");
+  const pageThree = html.match(/<article[^>]*data-page="2"[\s\S]*?<\/article>/)?.[0] ?? "";
+  assert.ok(pageThree);
+  assert.doesNotMatch(pageThree, /story-page--photo/);
+  assert.doesNotMatch(pageThree, /<img/);
+});
