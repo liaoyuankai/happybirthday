@@ -37,3 +37,10 @@ test("reveals the card and starts optional audio from a click", async () => {
   assert.match(js, /AudioContext|webkitAudioContext/);
   assert.match(js, /is-open/);
 });
+
+test("plays the recognizable Happy Birthday melody instead of ambient chords", async () => {
+  const js = await readFile(new URL("../postcard.js", import.meta.url), "utf8");
+  assert.match(js, /const happyBirthdayMelody/);
+  assert.match(js, /\["G4",\s*0\.75\],\s*\["G4",\s*0\.25\],\s*\["A4",\s*1\],\s*\["G4",\s*1\],\s*\["C5",\s*1\],\s*\["B4",\s*2\]/);
+  assert.doesNotMatch(js, /const chords/);
+});

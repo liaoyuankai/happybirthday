@@ -9,8 +9,22 @@
   let masterGain;
   let musicTimer;
   let isPlaying = false;
-  let chordIndex = 0;
-  const chords = [[261.63,329.63,392],[220,261.63,329.63],[174.61,220,261.63],[196,246.94,293.66]];
+  const noteFrequencies = {
+    G4: 392,
+    A4: 440,
+    B4: 493.88,
+    C5: 523.25,
+    D5: 587.33,
+    E5: 659.25,
+    F5: 698.46,
+    G5: 783.99
+  };
+  const happyBirthdayMelody = [
+    ["G4", 0.75], ["G4", 0.25], ["A4", 1], ["G4", 1], ["C5", 1], ["B4", 2],
+    ["G4", 0.75], ["G4", 0.25], ["A4", 1], ["G4", 1], ["D5", 1], ["C5", 2],
+    ["G4", 0.75], ["G4", 0.25], ["G5", 1], ["E5", 1], ["C5", 1], ["B4", 1], ["A4", 2],
+    ["F5", 0.75], ["F5", 0.25], ["E5", 1], ["C5", 1], ["D5", 1], ["C5", 2]
+  ];
 
   function setSoundState(playing) {
     isPlaying = playing;
@@ -19,22 +33,31 @@
     if (soundLabel) soundLabel.textContent = playing ? "播放中" : "音乐";
   }
 
-  function scheduleChord() {
+  function playMelody() {
     if (!audioContext || !masterGain || !isPlaying) return;
-    const now = audioContext.currentTime;
-    const notes = chords[chordIndex++ % chords.length];
-    notes.forEach((frequency, noteIndex) => {
+    const beatSeconds = 0.42;
+    let beatOffset = 0;
+    const startAt = audioContext.currentTime + 0.08;
+
+    happyBirthdayMelody.forEach(([note, beats]) => {
+      const noteStart = startAt + beatOffset * beatSeconds;
+      const noteEnd = noteStart + beats * beatSeconds * 0.9;
       const oscillator = audioContext.createOscillator();
       const gain = audioContext.createGain();
-      oscillator.type = "sine";
-      oscillator.frequency.value = frequency / 2;
-      gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(0.035 / (noteIndex + 1), now + 1.1);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 5.8);
+      oscillator.type = "triangle";
+      oscillator.frequency.value = noteFrequencies[note];
+      gain.gain.setValueAtTime(0.0001, noteStart);
+      gain.gain.exponentialRampToValueAtTime(0.28, noteStart + 0.025);
+      gain.gain.setValueAtTime(0.22, Math.max(noteStart + 0.03, noteEnd - 0.08));
+      gain.gain.exponentialRampToValueAtTime(0.0001, noteEnd);
       oscillator.connect(gain).connect(masterGain);
-      oscillator.start(now);
-      oscillator.stop(now + 6);
+      oscillator.start(noteStart);
+      oscillator.stop(noteEnd + 0.02);
+      beatOffset += beats;
     });
+
+    clearTimeout(musicTimer);
+    musicTimer = window.setTimeout(playMelody, (beatOffset * beatSeconds + 1.2) * 1000);
   }
 
   async function startMusic() {
@@ -44,24 +67,24 @@
       if (!audioContext) {
         audioContext = new AudioEngine();
         masterGain = audioContext.createGain();
-        masterGain.gain.value = 0.24;
+        masterGain.gain.value = 0.72;
         masterGain.connect(audioContext.destination);
       }
       await audioContext.resume();
       setSoundState(true);
-      scheduleChord();
-      clearInterval(musicTimer);
-      musicTimer = setInterval(scheduleChord, 4800);
+      playMelody();
     } catch {
       setSoundState(false);
     }
   }
 
   function stopMusic() {
-    clearInterval(musicTimer);
+    clearTimeout(musicTimer);
     musicTimer = undefined;
     setSoundState(false);
-    if (audioContext?.state === "running") audioContext.suspend().catch(() => {});
+    if (audioContext) audioContext.close().catch(() => {});
+    audioContext = undefined;
+    masterGain = undefined;
   }
 
   function createPetals() {
