@@ -6,6 +6,10 @@
   const soundLabel = soundButton?.querySelector(".sound-toggle__text");
   const storyPages = [...document.querySelectorAll(".story-page")];
   const nextButtons = [...document.querySelectorAll(".next-page")];
+  const cakeStage = document.querySelector("#cake-stage");
+  const wishButton = document.querySelector("#wish-button");
+  const blowButton = document.querySelector("#blow-button");
+  const acceptWishButton = document.querySelector("#accept-wish");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const birthdayAudio = new Audio("assets/happy-birthday.m4a");
   birthdayAudio.loop = true;
@@ -62,6 +66,14 @@
     }, reduceMotion ? 0 : 80);
   }
 
+  function celebrateCake() {
+    cakeStage?.classList.add("is-celebrated");
+    if (blowButton) blowButton.hidden = true;
+    window.setTimeout(() => {
+      if (acceptWishButton) acceptWishButton.hidden = false;
+    }, reduceMotion ? 0 : 900);
+  }
+
   openButton?.addEventListener("click", async () => {
     document.body.classList.add("is-open");
     createPetals();
@@ -75,6 +87,15 @@
       showStoryPage(Number(button.dataset.next));
     });
   });
+
+  wishButton?.addEventListener("click", () => {
+    cakeStage?.classList.add("is-ready");
+    wishButton.hidden = true;
+    if (blowButton) blowButton.hidden = false;
+  });
+
+  blowButton?.addEventListener("click", celebrateCake);
+  acceptWishButton?.addEventListener("click", () => showStoryPage(7));
 
   soundButton?.addEventListener("click", () => {
     if (isPlaying) stopMusic();

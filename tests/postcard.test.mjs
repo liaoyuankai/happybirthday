@@ -46,9 +46,9 @@ test("plays the user-provided Happy Birthday recording in an iPhone-friendly for
   assert.doesNotMatch(js, /AudioContext|webkitAudioContext/);
 });
 
-test("contains the approved seven-page compliment story", async () => {
+test("contains the approved eight-page compliment and cake story", async () => {
   const html = await readFile(htmlPath, "utf8");
-  assert.equal((html.match(/<article class="story-page/g) || []).length, 7);
+  assert.equal((html.match(/<article class="story-page/g) || []).length, 8);
   assert.equal((html.match(/class="next-page/g) || []).length, 6);
   assert.match(html, /嘿嘿，没想到吧/);
   assert.match(html, /你是一个挺有意思的人/);
@@ -68,4 +68,15 @@ test("keeps page three visually consistent without a photo background", async ()
   assert.ok(pageThree);
   assert.doesNotMatch(pageThree, /story-page--photo/);
   assert.doesNotMatch(pageThree, /<img/);
+});
+
+test("includes the wish, candle, and celebration states", async () => {
+  const html = await readFile(htmlPath, "utf8");
+  const js = await readFile(new URL("../postcard.js", import.meta.url), "utf8");
+  assert.match(html, /id="wish-button"/);
+  assert.match(html, /id="blow-button"/);
+  assert.match(html, /id="accept-wish"/);
+  assert.match(html, /愿望已被宇宙签收/);
+  assert.match(js, /function celebrateCake/);
+  assert.match(js, /classList\.add\("is-celebrated"\)/);
 });
