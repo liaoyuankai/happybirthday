@@ -80,3 +80,18 @@ test("includes the wish, candle, and celebration states", async () => {
   assert.match(js, /function celebrateCake/);
   assert.match(js, /classList\.add\("is-celebrated"\)/);
 });
+
+test("contains the approved expanded personal copy", async () => {
+  const html = await readFile(htmlPath, "utf8");
+  [
+    "不是故意不回你消息",
+    "这种感觉，其实挺珍贵的",
+    "有时候又能让我笑很久",
+    "不会为了迎合别人",
+    "没能陪在你身边过生日",
+    "希望这个愿望，真的会实现",
+    "也算陪你一起吹过蜡烛啦",
+    "也希望以后还能陪你经历更多值得记住的时刻"
+  ].forEach((copy) => assert.ok(html.includes(copy), "missing copy: " + copy));
+  assert.doesNotMatch(html, /前段时间/);
+});
