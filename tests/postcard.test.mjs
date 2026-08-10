@@ -34,13 +34,14 @@ test("implements iPhone safe areas and reduced motion", async () => {
 test("reveals the card and starts optional audio from a click", async () => {
   const js = await readFile(new URL("../postcard.js", import.meta.url), "utf8");
   assert.match(js, /addEventListener\("click"/);
-  assert.match(js, /AudioContext|webkitAudioContext/);
+  assert.match(js, /new Audio/);
   assert.match(js, /is-open/);
 });
 
-test("plays the recognizable Happy Birthday melody instead of ambient chords", async () => {
+test("plays the user-provided Happy Birthday recording in an iPhone-friendly format", async () => {
   const js = await readFile(new URL("../postcard.js", import.meta.url), "utf8");
-  assert.match(js, /const happyBirthdayMelody/);
-  assert.match(js, /\["G4",\s*0\.75\],\s*\["G4",\s*0\.25\],\s*\["A4",\s*1\],\s*\["G4",\s*1\],\s*\["C5",\s*1\],\s*\["B4",\s*2\]/);
-  assert.doesNotMatch(js, /const chords/);
+  await stat(new URL("../assets/happy-birthday.m4a", import.meta.url));
+  assert.match(js, /new Audio\("assets\/happy-birthday\.m4a"\)/);
+  assert.match(js, /birthdayAudio\.loop = true/);
+  assert.doesNotMatch(js, /AudioContext|webkitAudioContext/);
 });

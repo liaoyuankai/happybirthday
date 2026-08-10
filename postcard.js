@@ -5,26 +5,11 @@
   const soundButton = document.querySelector("#sound-toggle");
   const soundLabel = soundButton?.querySelector(".sound-toggle__text");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let audioContext;
-  let masterGain;
-  let musicTimer;
+  const birthdayAudio = new Audio("assets/happy-birthday.m4a");
+  birthdayAudio.loop = true;
+  birthdayAudio.preload = "metadata";
+  birthdayAudio.volume = 0.82;
   let isPlaying = false;
-  const noteFrequencies = {
-    G4: 392,
-    A4: 440,
-    B4: 493.88,
-    C5: 523.25,
-    D5: 587.33,
-    E5: 659.25,
-    F5: 698.46,
-    G5: 783.99
-  };
-  const happyBirthdayMelody = [
-    ["G4", 0.75], ["G4", 0.25], ["A4", 1], ["G4", 1], ["C5", 1], ["B4", 2],
-    ["G4", 0.75], ["G4", 0.25], ["A4", 1], ["G4", 1], ["D5", 1], ["C5", 2],
-    ["G4", 0.75], ["G4", 0.25], ["G5", 1], ["E5", 1], ["C5", 1], ["B4", 1], ["A4", 2],
-    ["F5", 0.75], ["F5", 0.25], ["E5", 1], ["C5", 1], ["D5", 1], ["C5", 2]
-  ];
 
   function setSoundState(playing) {
     isPlaying = playing;
@@ -33,58 +18,18 @@
     if (soundLabel) soundLabel.textContent = playing ? "播放中" : "音乐";
   }
 
-  function playMelody() {
-    if (!audioContext || !masterGain || !isPlaying) return;
-    const beatSeconds = 0.42;
-    let beatOffset = 0;
-    const startAt = audioContext.currentTime + 0.08;
-
-    happyBirthdayMelody.forEach(([note, beats]) => {
-      const noteStart = startAt + beatOffset * beatSeconds;
-      const noteEnd = noteStart + beats * beatSeconds * 0.9;
-      const oscillator = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      oscillator.type = "triangle";
-      oscillator.frequency.value = noteFrequencies[note];
-      gain.gain.setValueAtTime(0.0001, noteStart);
-      gain.gain.exponentialRampToValueAtTime(0.28, noteStart + 0.025);
-      gain.gain.setValueAtTime(0.22, Math.max(noteStart + 0.03, noteEnd - 0.08));
-      gain.gain.exponentialRampToValueAtTime(0.0001, noteEnd);
-      oscillator.connect(gain).connect(masterGain);
-      oscillator.start(noteStart);
-      oscillator.stop(noteEnd + 0.02);
-      beatOffset += beats;
-    });
-
-    clearTimeout(musicTimer);
-    musicTimer = window.setTimeout(playMelody, (beatOffset * beatSeconds + 1.2) * 1000);
-  }
-
   async function startMusic() {
     try {
-      const AudioEngine = window.AudioContext || window.webkitAudioContext;
-      if (!AudioEngine) return;
-      if (!audioContext) {
-        audioContext = new AudioEngine();
-        masterGain = audioContext.createGain();
-        masterGain.gain.value = 0.72;
-        masterGain.connect(audioContext.destination);
-      }
-      await audioContext.resume();
+      await birthdayAudio.play();
       setSoundState(true);
-      playMelody();
     } catch {
       setSoundState(false);
     }
   }
 
   function stopMusic() {
-    clearTimeout(musicTimer);
-    musicTimer = undefined;
+    birthdayAudio.pause();
     setSoundState(false);
-    if (audioContext) audioContext.close().catch(() => {});
-    audioContext = undefined;
-    masterGain = undefined;
   }
 
   function createPetals() {
@@ -113,6 +58,10 @@
     if (isPlaying) stopMusic();
     else startMusic();
   });
+
+  birthdayAudio.addEventListener("play", () => setSoundState(true));
+  birthdayAudio.addEventListener("pause", () => setSoundState(false));
+  birthdayAudio.addEventListener("error", () => setSoundState(false));
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden && isPlaying) stopMusic();
