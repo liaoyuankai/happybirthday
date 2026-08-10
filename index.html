@@ -29,25 +29,92 @@
       <p class="cover__hint">为你珍藏的这一刻</p>
     </section>
 
-    <section id="story" class="story" aria-labelledby="letter-title">
+    <section id="story" class="story" aria-label="写给朱熠欣的生日惊喜">
       <div id="petals" class="petals" aria-hidden="true"></div>
-      <div class="story__photo-wrap">
-        <img class="story__photo" src="assets/photo-story.webp" alt="两人在一束温柔光线下相伴而坐" loading="lazy">
-        <div class="story__photo-fade" aria-hidden="true"></div>
-        <p class="story__photo-note">愿此刻的光，也照亮你新一岁的每一天</p>
-      </div>
 
-      <article class="letter">
-        <p class="letter__mark" aria-hidden="true">✦</p>
-        <p class="eyebrow">FOR ZHU YIXIN</p>
-        <h2 id="letter-title">写给闪闪发光的你</h2>
-        <div class="letter__body">
-          <p>愿新一岁的你，眼里常有星光，<br>身边总有温柔，所念皆有回应。</p>
-          <p>愿每一场相遇都有意义，<br>每一段故事都有温暖的结局。</p>
-          <p class="letter__birthday">朱熠欣，生日快乐。<br>岁岁欢愉，永远闪闪发光。</p>
+      <article class="story-page is-active" data-page="0" aria-hidden="false">
+        <span class="story-page__number">01 / 07</span>
+        <div class="story-page__content">
+          <p class="story-page__symbol" aria-hidden="true">✦</p>
+          <h2>嘿嘿，没想到吧。</h2>
+          <p>其实你对我来说很重要的啦，<br>所以偷偷给你准备了一个“惊喜”。</p>
         </div>
-        <p class="signature">——沈梦秋，哦不，琉璃大魔王</p>
-        <div class="letter__seal" aria-hidden="true">生辰<br>吉乐</div>
+        <button class="next-page" type="button" data-next="1">继续 <span aria-hidden="true">→</span></button>
+      </article>
+
+      <article class="story-page" data-page="1" aria-hidden="true">
+        <span class="story-page__number">02 / 07</span>
+        <div class="story-page__content">
+          <p class="story-page__label">关于你 · 其一</p>
+          <h2>真诚，是很难得的事。</h2>
+          <p>我很喜欢你的真诚。<br>和你相处的时候，不需要猜来猜去，<br>是一种很难得的轻松。</p>
+        </div>
+        <button class="next-page" type="button" data-next="2">还有呢 <span aria-hidden="true">→</span></button>
+      </article>
+
+      <article class="story-page story-page--photo" data-page="2" aria-hidden="true">
+        <img src="assets/photo-cover.webp" alt="" loading="lazy" aria-hidden="true">
+        <div class="story-page__veil" aria-hidden="true"></div>
+        <span class="story-page__number">03 / 07</span>
+        <div class="story-page__content">
+          <p class="story-page__label">关于你 · 其二</p>
+          <h2>你是一个挺有意思的人。</h2>
+          <p>总能冒出一些让人意想不到的话，<br>和你待在一起，很难觉得无聊。</p>
+        </div>
+        <button class="next-page" type="button" data-next="3">继续看看 <span aria-hidden="true">→</span></button>
+      </article>
+
+      <article class="story-page" data-page="3" aria-hidden="true">
+        <span class="story-page__number">04 / 07</span>
+        <div class="story-page__content">
+          <p class="story-page__label">关于你 · 其三</p>
+          <h2>认真，也可爱。</h2>
+          <p>你认真起来的时候很亮眼，<br>偶尔迷迷糊糊的时候也很可爱。</p>
+          <p class="story-page__aside">嗯，这句不是客套。</p>
+        </div>
+        <button class="next-page" type="button" data-next="4">再一页 <span aria-hidden="true">→</span></button>
+      </article>
+
+      <article class="story-page" data-page="4" aria-hidden="true">
+        <span class="story-page__number">05 / 07</span>
+        <div class="story-page__content">
+          <p class="story-page__label">关于你 · 其四</p>
+          <h2>安静地坚持，也很闪耀。</h2>
+          <p>你有自己的想法，也有自己的坚持。<br>不张扬，却总能让人注意到你。</p>
+        </div>
+        <button class="next-page" type="button" data-next="5">快到最后啦 <span aria-hidden="true">→</span></button>
+      </article>
+
+      <article class="story-page story-page--deep" data-page="5" aria-hidden="true">
+        <span class="story-page__number">06 / 07</span>
+        <div class="story-page__content">
+          <p class="story-page__symbol" aria-hidden="true">✦</p>
+          <h2>希望你偶尔也能看见——</h2>
+          <p>自己在别人眼里有多特别。<br>至少在我这里，<br>你一直都很重要。</p>
+        </div>
+        <button class="next-page" type="button" data-next="6">最后一页啦 <span aria-hidden="true">→</span></button>
+      </article>
+
+      <article class="story-page story-page--final" data-page="6" aria-hidden="true">
+        <span class="story-page__number">07 / 07</span>
+        <div class="story__photo-wrap">
+          <img class="story__photo" src="assets/photo-story.webp" alt="两人在一束温柔光线下相伴而坐" loading="lazy">
+          <div class="story__photo-fade" aria-hidden="true"></div>
+          <p class="story__photo-note">愿此刻的光，也照亮你新一岁的每一天</p>
+        </div>
+
+        <div class="letter">
+          <p class="letter__mark" aria-hidden="true">✦</p>
+          <p class="eyebrow">FOR ZHU YIXIN</p>
+          <h2 id="letter-title">写给闪闪发光的你</h2>
+          <div class="letter__body">
+            <p>愿新一岁的你，眼里常有星光，<br>身边总有温柔，所念皆有回应。</p>
+            <p>愿每一场相遇都有意义，<br>每一段故事都有温暖的结局。</p>
+            <p class="letter__birthday">朱熠欣，生日快乐。<br>岁岁欢愉，永远闪闪发光。</p>
+          </div>
+          <p class="signature">——沈梦秋，哦不，琉璃大魔王</p>
+          <div class="letter__seal" aria-hidden="true">生辰<br>吉乐</div>
+        </div>
       </article>
     </section>
   </main>

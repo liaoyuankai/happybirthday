@@ -4,6 +4,8 @@
   const petalLayer = document.querySelector("#petals");
   const soundButton = document.querySelector("#sound-toggle");
   const soundLabel = soundButton?.querySelector(".sound-toggle__text");
+  const storyPages = [...document.querySelectorAll(".story-page")];
+  const nextButtons = [...document.querySelectorAll(".next-page")];
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const birthdayAudio = new Audio("assets/happy-birthday.m4a");
   birthdayAudio.loop = true;
@@ -47,11 +49,31 @@
     petalLayer.appendChild(fragment);
   }
 
+  function showStoryPage(index) {
+    const page = storyPages[index];
+    if (!page) return;
+    storyPages.forEach((storyPage, pageIndex) => {
+      const active = pageIndex === index;
+      storyPage.classList.toggle("is-active", active);
+      storyPage.setAttribute("aria-hidden", String(!active));
+    });
+    window.setTimeout(() => {
+      page.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block: "start"});
+    }, reduceMotion ? 0 : 80);
+  }
+
   openButton?.addEventListener("click", async () => {
     document.body.classList.add("is-open");
     createPetals();
+    showStoryPage(0);
     await startMusic();
-    window.setTimeout(() => story?.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth"}), 280);
+    window.setTimeout(() => story?.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth"}), 240);
+  });
+
+  nextButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showStoryPage(Number(button.dataset.next));
+    });
   });
 
   soundButton?.addEventListener("click", () => {

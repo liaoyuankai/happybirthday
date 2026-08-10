@@ -45,3 +45,19 @@ test("plays the user-provided Happy Birthday recording in an iPhone-friendly for
   assert.match(js, /birthdayAudio\.loop = true/);
   assert.doesNotMatch(js, /AudioContext|webkitAudioContext/);
 });
+
+test("contains the approved seven-page compliment story", async () => {
+  const html = await readFile(htmlPath, "utf8");
+  assert.equal((html.match(/<article class="story-page/g) || []).length, 7);
+  assert.equal((html.match(/class="next-page/g) || []).length, 6);
+  assert.match(html, /嘿嘿，没想到吧/);
+  assert.match(html, /你是一个挺有意思的人/);
+  assert.doesNotMatch(html, /你比自己以为的更温柔/);
+});
+
+test("advances story pages without restarting the audio", async () => {
+  const js = await readFile(new URL("../postcard.js", import.meta.url), "utf8");
+  assert.match(js, /function showStoryPage/);
+  assert.match(js, /nextButtons\.forEach/);
+  assert.match(js, /showStoryPage\(0\)/);
+});
